@@ -1,0 +1,33 @@
+{
+  "model_name": "work_binary",
+  "accuracy": 0.760684636671108,
+  "f1_macro": 0.43203911752721347,
+  "roc_auc": 0.5229857469863598,
+  "classification_report": {
+    "<=50K": {
+      "precision": 0.760684636671108,
+      "recall": 1.0,
+      "f1-score": 0.8640782350544269,
+      "support": 7422.0
+    },
+    ">50K": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 2335.0
+    },
+    "accuracy": 0.760684636671108,
+    "macro avg": {
+      "precision": 0.380342318335554,
+      "recall": 0.5,
+      "f1-score": 0.43203911752721347,
+      "support": 9757.0
+    },
+    "weighted avg": {
+      "precision": 0.5786411164674555,
+      "recall": 0.760684636671108,
+      "f1-score": 0.6572910382877889,
+      "support": 9757.0
+    }
+  }
+}

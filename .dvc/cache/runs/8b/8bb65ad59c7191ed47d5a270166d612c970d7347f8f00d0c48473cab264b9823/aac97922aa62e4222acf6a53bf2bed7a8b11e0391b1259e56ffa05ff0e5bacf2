@@ -1,0 +1,27 @@
+cmd: python -m src.clean
+deps:
+- path: data/raw/features.parquet
+  hash: md5
+  md5: 064eec8e33bcbcadd63bed275b3148ff
+  size: 512499
+- path: data/raw/targets.parquet
+  hash: md5
+  md5: 7eb4e0d76f9e96834b251f4cc159a12a
+  size: 12768
+outs:
+- path: data/processed/Xtest.parquet
+  hash: md5
+  md5: ff46c78f41f0f0b24962099d2e921974
+  size: 184003
+- path: data/processed/Xtrain.parquet
+  hash: md5
+  md5: 9d81f2269d4bfefec08e62fa74c2a453
+  size: 667963
+- path: data/processed/ytest.parquet
+  hash: md5
+  md5: 9b42d8df7a7c1de55a65d246de523d43
+  size: 62285
+- path: data/processed/ytrain.parquet
+  hash: md5
+  md5: 001693033bc4aed2db1db797dffe7e58
+  size: 252548
