@@ -1,0 +1,31 @@
+cmd: python -m src.train
+deps:
+- path: artifacts/Xtrain_processed.parquet
+  hash: md5
+  md5: 18f23e5d6b190d87ce6029e6a6287bdb
+  size: 452320
+- path: data/processed/ytrain.parquet
+  hash: md5
+  md5: 001693033bc4aed2db1db797dffe7e58
+  size: 252548
+outs:
+- path: models/model.pkl
+  hash: md5
+  md5: 3383342c593eb1558b91c28cfad9d78b
+  size: 143720
+- path: models/model_capital_logit.pkl
+  hash: md5
+  md5: 12fcf7b600c3202027de7d7c7ab48ded
+  size: 1291
+- path: models/model_global.pkl
+  hash: md5
+  md5: 3383342c593eb1558b91c28cfad9d78b
+  size: 143720
+- path: models/model_time_linear.pkl
+  hash: md5
+  md5: 1af028310e894a90b52c5cd63a614a91
+  size: 1115
+- path: models/model_work_binary.pkl
+  hash: md5
+  md5: d9ae7c7696b297e9374327b35bc2567a
+  size: 1263

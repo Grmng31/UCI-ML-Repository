@@ -1,0 +1,70 @@
+stages:
+  ingest:
+    cmd: python -m src.ingest
+    outs:
+      - data/raw/features.parquet
+      - data/raw/targets.parquet
+
+  validate:
+    cmd: python -m src.validate
+    deps:
+      - data/raw/features.parquet
+      - data/raw/targets.parquet
+    metrics:
+      - artifacts/validation_report.json:
+          cache: false
+
+  clean:
+    cmd: python -m src.clean
+    deps:
+      - data/raw/features.parquet
+      - data/raw/targets.parquet
+    outs:
+      - data/processed/Xtrain.parquet
+      - data/processed/Xtest.parquet
+      - data/processed/ytrain.parquet
+      - data/processed/ytest.parquet
+
+  features:
+    cmd: python -m src.features
+    deps:
+      - data/processed/Xtrain.parquet
+      - data/processed/ytrain.parquet
+    outs:
+      - artifacts/Xtrain_processed.parquet
+      - artifacts/Xtest_processed.parquet
+      - artifacts/scaler.joblib
+      - artifacts/encoder.joblib
+      - artifacts/target_enc.joblib
+      - artifacts/pipeline.joblib
+
+  train:
+    cmd: python -m src.train
+    deps:
+      - artifacts/Xtrain_processed.parquet
+      - data/processed/ytrain.parquet
+    outs:
+      - models/model.pkl
+      - models/model_global.pkl
+      - models/model_capital_logit.pkl
+      - models/model_time_linear.pkl
+      - models/model_work_binary.pkl
+
+  evaluate:
+    cmd: python -m src.evaluate
+    deps:
+      - models/
+      - artifacts/Xtest_processed.parquet
+      - data/processed/ytest.parquet
+    metrics:
+      - artifacts/metrics_global.json:
+          cache: false
+      - artifacts/metrics_all_models.json:
+          cache: false
+
+  tests:
+    cmd: python tests/test_models.py
+    deps:
+      - artifacts/metrics_all_models.json
+    outs:
+      - tests/last_test_run.json

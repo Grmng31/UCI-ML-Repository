@@ -1,0 +1,162 @@
+schema: '2.0'
+stages:
+  ingest:
+    cmd: python -m src.ingest
+    outs:
+    - path: data/raw/features.parquet
+      hash: md5
+      md5: 064eec8e33bcbcadd63bed275b3148ff
+      size: 512499
+    - path: data/raw/targets.parquet
+      hash: md5
+      md5: 7eb4e0d76f9e96834b251f4cc159a12a
+      size: 12768
+  validate:
+    cmd: python -m src.validate
+    deps:
+    - path: data/raw/features.parquet
+      hash: md5
+      md5: 064eec8e33bcbcadd63bed275b3148ff
+      size: 512499
+    - path: data/raw/targets.parquet
+      hash: md5
+      md5: 7eb4e0d76f9e96834b251f4cc159a12a
+      size: 12768
+    outs:
+    - path: artifacts/validation_report.json
+      hash: md5
+      md5: 98f4284272d93934c83aee4e4f930963
+      size: 3746
+  clean:
+    cmd: python -m src.clean
+    deps:
+    - path: data/raw/features.parquet
+      hash: md5
+      md5: 064eec8e33bcbcadd63bed275b3148ff
+      size: 512499
+    - path: data/raw/targets.parquet
+      hash: md5
+      md5: 7eb4e0d76f9e96834b251f4cc159a12a
+      size: 12768
+    outs:
+    - path: data/processed/Xtest.parquet
+      hash: md5
+      md5: ff46c78f41f0f0b24962099d2e921974
+      size: 184003
+    - path: data/processed/Xtrain.parquet
+      hash: md5
+      md5: 9d81f2269d4bfefec08e62fa74c2a453
+      size: 667963
+    - path: data/processed/ytest.parquet
+      hash: md5
+      md5: 9b42d8df7a7c1de55a65d246de523d43
+      size: 62285
+    - path: data/processed/ytrain.parquet
+      hash: md5
+      md5: 001693033bc4aed2db1db797dffe7e58
+      size: 252548
+  features:
+    cmd: python -m src.features
+    deps:
+    - path: data/processed/Xtrain.parquet
+      hash: md5
+      md5: 9d81f2269d4bfefec08e62fa74c2a453
+      size: 667963
+    - path: data/processed/ytrain.parquet
+      hash: md5
+      md5: 001693033bc4aed2db1db797dffe7e58
+      size: 252548
+    outs:
+    - path: artifacts/Xtest_processed.parquet
+      hash: md5
+      md5: 3a63b09fd30afc45f3a9ad446cfc39c2
+      size: 120261
+    - path: artifacts/Xtrain_processed.parquet
+      hash: md5
+      md5: 18f23e5d6b190d87ce6029e6a6287bdb
+      size: 452320
+    - path: artifacts/encoder.joblib
+      hash: md5
+      md5: 0d7cca362e2ba63ccaa5b9ab703c7d63
+      size: 2941
+    - path: artifacts/pipeline.joblib
+      hash: md5
+      md5: 3d206c6688ddc7c2a7e97dc8d2910e2d
+      size: 8632
+    - path: artifacts/scaler.joblib
+      hash: md5
+      md5: 82a999767b2e31b77a18320d2a7e8925
+      size: 663
+    - path: artifacts/target_enc.joblib
+      hash: md5
+      md5: d339a565e0e2ff9dfb20a06694f3956e
+      size: 1320
+  train:
+    cmd: python -m src.train
+    deps:
+    - path: artifacts/Xtrain_processed.parquet
+      hash: md5
+      md5: 18f23e5d6b190d87ce6029e6a6287bdb
+      size: 452320
+    - path: data/processed/ytrain.parquet
+      hash: md5
+      md5: 001693033bc4aed2db1db797dffe7e58
+      size: 252548
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: 3383342c593eb1558b91c28cfad9d78b
+      size: 143720
+    - path: models/model_capital_logit.pkl
+      hash: md5
+      md5: 12fcf7b600c3202027de7d7c7ab48ded
+      size: 1291
+    - path: models/model_global.pkl
+      hash: md5
+      md5: 3383342c593eb1558b91c28cfad9d78b
+      size: 143720
+    - path: models/model_time_linear.pkl
+      hash: md5
+      md5: 1af028310e894a90b52c5cd63a614a91
+      size: 1115
+    - path: models/model_work_binary.pkl
+      hash: md5
+      md5: d9ae7c7696b297e9374327b35bc2567a
+      size: 1263
+  evaluate:
+    cmd: python -m src.evaluate
+    deps:
+    - path: artifacts/Xtest_processed.parquet
+      hash: md5
+      md5: 3a63b09fd30afc45f3a9ad446cfc39c2
+      size: 120261
+    - path: data/processed/ytest.parquet
+      hash: md5
+      md5: 9b42d8df7a7c1de55a65d246de523d43
+      size: 62285
+    - path: models/
+      hash: md5
+      md5: 08518583db07b52defd9ec6d3c16c882.dir
+      size: 291109
+      nfiles: 5
+    outs:
+    - path: artifacts/metrics_all_models.json
+      hash: md5
+      md5: 4a012f8fb4d7951ac604fcf558e5879b
+      size: 3647
+    - path: artifacts/metrics_global.json
+      hash: md5
+      md5: 4f22c4841a9e0bded7ab5bd8ace4b7a1
+      size: 842
+  tests:
+    cmd: python tests/test_models.py
+    deps:
+    - path: artifacts/metrics_all_models.json
+      hash: md5
+      md5: 4a012f8fb4d7951ac604fcf558e5879b
+      size: 3647
+    outs:
+    - path: tests/last_test_run.json
+      hash: md5
+      md5: 7ec2ca3e1bdb5d506e81c6534263e447
+      size: 4704
